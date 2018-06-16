@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 16. Jun 2018 um 14:23
+-- Erstellungszeit: 16. Jun 2018 um 12:17
 -- Server-Version: 10.1.32-MariaDB
 -- PHP-Version: 7.2.5
 
@@ -71,20 +71,12 @@ CREATE TABLE `bill` (
 
 CREATE TABLE `car` (
   `car_ID` int(11) NOT NULL,
+  `car_type` varchar(55) DEFAULT NULL,
   `car_color` varchar(55) DEFAULT NULL,
   `car_price` int(11) DEFAULT NULL,
   `fk_insurance_ID` int(11) DEFAULT NULL,
-  `fk_model_ID` int(11) DEFAULT NULL,
-  `fk_car_type_ID` int(11) DEFAULT NULL
+  `fk_model_ID` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Daten für Tabelle `car`
---
-
-INSERT INTO `car` (`car_ID`, `car_color`, `car_price`, `fk_insurance_ID`, `fk_model_ID`, `fk_car_type_ID`) VALUES
-(22, 'black', 2200, 1, 2749, 2),
-(23, 'black', 1500, 1, 632, 1);
 
 -- --------------------------------------------------------
 
@@ -101,35 +93,6 @@ CREATE TABLE `car_model` (
   `HQ` varchar(55) DEFAULT NULL,
   `country` varchar(55) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Daten für Tabelle `car_model`
---
-
-INSERT INTO `car_model` (`model_ID`, `model_name`, `model_no`, `manufacture`, `postcode`, `HQ`, `country`) VALUES
-(632, 'X5', 298178471, 'BMW A.G.', '93739', 'München', 'Deutschland'),
-(2749, 'Urus', 754912593, 'Automobili Lamborghini S.p.A.', '00118', 'Sant’Agata Bolognese', 'Italy');
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `car_type`
---
-
-CREATE TABLE `car_type` (
-  `car_type_ID` int(11) NOT NULL,
-  `name` varchar(55) DEFAULT NULL,
-  `doors` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Daten für Tabelle `car_type`
---
-
-INSERT INTO `car_type` (`car_type_ID`, `name`, `doors`) VALUES
-(1, 'SUV', 5),
-(2, 'Concept Car', 2),
-(3, 'Sport Car', 3);
 
 -- --------------------------------------------------------
 
@@ -161,15 +124,6 @@ CREATE TABLE `insurance` (
   `fk_insurance_type_ID` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Daten für Tabelle `insurance`
---
-
-INSERT INTO `insurance` (`insurance_ID`, `insurance_price`, `fk_insurance_company_ID`, `fk_insurance_type_ID`) VALUES
-(1, 750, 72, 2),
-(2, 100, 51, 1),
-(3, 150, 72, 4);
-
 -- --------------------------------------------------------
 
 --
@@ -180,19 +134,8 @@ CREATE TABLE `insurance_company` (
   `company_ID` int(11) NOT NULL,
   `company_name` varchar(55) DEFAULT NULL,
   `company_address` varchar(55) DEFAULT NULL,
-  `postcode` char(5) DEFAULT NULL,
-  `city` varchar(55) DEFAULT '0',
-  `country` varchar(55) DEFAULT NULL
+  `postcode` char(5) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Daten für Tabelle `insurance_company`
---
-
-INSERT INTO `insurance_company` (`company_ID`, `company_name`, `company_address`, `postcode`, `city`, `country`) VALUES
-(51, 'Donau Versicherung', 'Melkstrasse 81', '2538', 'Melk', 'Austria'),
-(72, 'Wiener Städtische Versicherung', 'Wienerstrasse 18', '2358', 'St.Pölten', 'Austria'),
-(837, 'Wüstenrot GsmbH', 'Linzerstrasse 18', '1140', 'Wien', 'Austria');
 
 -- --------------------------------------------------------
 
@@ -205,16 +148,6 @@ CREATE TABLE `insurance_type` (
   `type_name` varchar(55) DEFAULT NULL,
   `insurance_price` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Daten für Tabelle `insurance_type`
---
-
-INSERT INTO `insurance_type` (`insurance_type_ID`, `type_name`, `insurance_price`) VALUES
-(1, 'Haftpflicht', 250),
-(2, 'Vollkasko', 750),
-(3, 'Teilkasko', 500),
-(4, 'Parkschaden', 150);
 
 -- --------------------------------------------------------
 
@@ -309,20 +242,13 @@ ALTER TABLE `bill`
 ALTER TABLE `car`
   ADD PRIMARY KEY (`car_ID`),
   ADD KEY `fk_insurance_ID` (`fk_insurance_ID`),
-  ADD KEY `fk_model_ID` (`fk_model_ID`),
-  ADD KEY `fk_car_type_ID` (`fk_car_type_ID`);
+  ADD KEY `fk_model_ID` (`fk_model_ID`);
 
 --
 -- Indizes für die Tabelle `car_model`
 --
 ALTER TABLE `car_model`
   ADD PRIMARY KEY (`model_ID`);
-
---
--- Indizes für die Tabelle `car_type`
---
-ALTER TABLE `car_type`
-  ADD PRIMARY KEY (`car_type_ID`);
 
 --
 -- Indizes für die Tabelle `driver`
@@ -417,8 +343,7 @@ ALTER TABLE `bill`
 --
 ALTER TABLE `car`
   ADD CONSTRAINT `car_ibfk_1` FOREIGN KEY (`fk_insurance_ID`) REFERENCES `insurance` (`insurance_ID`),
-  ADD CONSTRAINT `car_ibfk_2` FOREIGN KEY (`fk_model_ID`) REFERENCES `car_model` (`model_ID`),
-  ADD CONSTRAINT `car_ibfk_3` FOREIGN KEY (`fk_car_type_ID`) REFERENCES `car_type` (`car_type_ID`);
+  ADD CONSTRAINT `car_ibfk_2` FOREIGN KEY (`fk_model_ID`) REFERENCES `car_model` (`model_ID`);
 
 --
 -- Constraints der Tabelle `driver`
